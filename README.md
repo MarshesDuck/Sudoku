@@ -1,4 +1,4 @@
-# Sudoku
+# Sudoku Without Friends
 
 Looking for something more solitary than Sudoku with Friends™? 
 
