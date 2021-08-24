@@ -1,7 +1,4 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 
 public class mainMenu extends JFrame {
@@ -11,17 +8,9 @@ public class mainMenu extends JFrame {
         ImageImplement panel = new ImageImplement(new ImageIcon("assets/titleScreen.png").getImage());
         
         
-        startButton = new JButton();
-        optionButton = new JButton();
+        startButton = new JButton(new ImageIcon("assets/startButton.png"));
+        optionButton = new JButton(new ImageIcon("assets/optionButton.png"));
 
-
-        startButton.setOpaque(false);
-        startButton.setContentAreaFilled(false);
-        startButton.setBorderPainted(false);
-
-        optionButton.setOpaque(false);
-        optionButton.setContentAreaFilled(false);
-        optionButton.setBorderPainted(false);
 
         startButton.setBounds(443,355,130,50);
         optionButton.setBounds(437,420,150,50);
