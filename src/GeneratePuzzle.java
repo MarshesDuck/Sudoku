@@ -43,10 +43,6 @@ public class GeneratePuzzle {
             JSONObject curr = arr.getJSONObject(i);
             puzzle[curr.getInt("x")][curr.getInt("y")] = curr.getInt("value");
         }
-     
-
-
-
     }
     public int[][] getPuzzle(){
         return puzzle;
@@ -60,9 +56,5 @@ public class GeneratePuzzle {
             }
             System.out.println();
         }
-        
-        
-
-        
     }
 }
