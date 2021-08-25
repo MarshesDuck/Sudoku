@@ -25,6 +25,16 @@ public class mainMenu extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        BGMPlayer player = new BGMPlayer();
+        player.play("Music/BGM.wav");
+        boolean running = true;
+        while (running){
+            if (player.playCompleted){
+                player.playCompleted = false;
+                player.play("Music/BGM.wav");
+            }
+        }
+
     }
     public static void main (String[] args) throws IOException {
         new mainMenu();
