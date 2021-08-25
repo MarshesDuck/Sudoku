@@ -2,14 +2,8 @@ import java.io.*;
 import java.net.*;
 import org.json.*;
 public class GeneratePuzzle {
-    private String response;
-    private int[][] puzzle;
-    public GeneratePuzzle(int level){
-        String FORMAT = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=%d&level=%d";
-        String url = String.format(FORMAT,9,level);
-        response = sendGet(url);
-        puzzle = new int[9][9];
-    }
+    private final int SIZE = 9;
+    private int[][] puzzle = new int[SIZE][SIZE];
     private String sendGet(String urlString){
         HttpURLConnection con = null;
         try {
@@ -31,10 +25,11 @@ public class GeneratePuzzle {
         }
         return null;
     }
-    public void newPuzzle(int size, int level){
+    public void newPuzzle(int level){
         String FORMAT = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=%d&level=%d";
-        String url = String.format(FORMAT,size,level);
-        response = sendGet(url);
+        String url = String.format(FORMAT,SIZE,level);
+        String response = sendGet(url);
+        puzzle = new int[SIZE][SIZE];
 
         JSONObject obj = new JSONObject(response);
         JSONArray arr = obj.getJSONArray("squares");
@@ -48,8 +43,8 @@ public class GeneratePuzzle {
         return puzzle;
     }
     public static void main(String[] args) {
-        GeneratePuzzle puzzle = new GeneratePuzzle(1);
-        puzzle.newPuzzle(9, 1);
+        GeneratePuzzle puzzle = new GeneratePuzzle();
+        puzzle.newPuzzle(1);
         for (int i = 0; i < puzzle.puzzle.length; i++){
             for (int j = 0; j < puzzle.puzzle[i].length; j++){
                 System.out.print(puzzle.puzzle[i][j]+" ");
