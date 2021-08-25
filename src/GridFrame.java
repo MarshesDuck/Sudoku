@@ -2,20 +2,29 @@ import javax.swing.*;
 import java.awt.*;
 public class GridFrame extends JPanel{
     JLabel[][] label;
-    GeneratePuzzle puzzle;
-    int[][] puzz;
+    GeneratePuzzle puzzleGenerator;
+    ImageImplement panel;
+    int[][] puzzle;
     GridFrame(){
-        ImageImplement panel = new ImageImplement(new ImageIcon("assets/board.png").getImage());
+        panel = new ImageImplement(new ImageIcon("assets/board.png").getImage());
         add(panel);
-        puzzle = new GeneratePuzzle();
-        puzzle.newPuzzle(1);
-        puzz = puzzle.getPuzzle();
 
+
+        puzzleGenerator = new GeneratePuzzle(1);
+        puzzle = puzzleGenerator.getPuzzle();
+
+        createLabels();
+        setSize(640,660);
+        setLayout(null);
+        setVisible(true);
+
+    }
+    private void createLabels(){
         label = new JLabel[9][9];
         for (int i = 0; i < label.length; i++){
             for (int j = 0; j < label[i].length; j++){
-                if (puzz[i][j] != 0){
-                    label[i][j] = new JLabel(String.valueOf(puzz[i][j]));
+                if (puzzle[i][j] != 0){
+                    label[i][j] = new JLabel(String.valueOf(puzzle[i][j]));
                 } else {
                     label[i][j] = new JLabel();
                 }
@@ -26,16 +35,5 @@ public class GridFrame extends JPanel{
                 panel.add(label[i][j]);
             }
         }
-        //textField = new JTextArea();
-        //textField.setBorder(BorderFactory.createLineBorder(Color.white, 0));
-        //textField.setBackground(null);
-        //textField.setVisible(true);
-    
-        //textField.getCaret().setVisible(false);
-        //textField.setCaretColor(getBackground());
-        setSize(640,660);
-        setLayout(null);
-        setVisible(true);
-
     }
 }
