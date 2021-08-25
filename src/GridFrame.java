@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 public class GridFrame extends JPanel{
-    JLabel[][] label;
-    GeneratePuzzle puzzleGenerator;
-    ImageImplement panel;
-    int[][] puzzle;
+    private JLabel[][] label;
+    private GeneratePuzzle puzzleGenerator;
+    private ImageImplement panel;
+    private int[][] puzzle;
     GridFrame(){
         panel = new ImageImplement(new ImageIcon("assets/board.png").getImage());
         add(panel);
