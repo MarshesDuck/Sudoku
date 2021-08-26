@@ -4,6 +4,7 @@ import java.awt.event.*;
 import javax.swing.event.MouseInputAdapter;
 public class Board {
     private int[][] puzzle;
+    private JLabel[][] label;
     private Options options;
     private GeneratePuzzle puzzleGenerator;
     public Board(Options options){
@@ -12,7 +13,7 @@ public class Board {
         puzzle = puzzleGenerator.getPuzzle();
     }
     public void createLabels(JPanel panel){
-        JLabel[][] label = new JLabel[9][9];
+        label = new JLabel[9][9];
         for (int i = 0; i < label.length; i++){
             for (int j = 0; j < label[i].length; j++){
                 final int x_coord = i;
@@ -99,6 +100,9 @@ public class Board {
     }
     private boolean checkMove(int val, int x_coord, int y_coord){
         return (checkRow(val,y_coord) && checkColumn(val,x_coord) && checkBox(val,x_coord,y_coord));
+    }
+    public JLabel[][] getLabels(){
+        return label;
     }
     
 }
