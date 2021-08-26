@@ -11,7 +11,7 @@ public class GameFrame extends JFrame{
     Options options;
     Board board;
     private final int BOARD_WIDTH = 630;
-    private final int BOARD_HEIGHT = 700;
+    private final int BOARD_HEIGHT = 650;
     public GameFrame(){
         
         options = new Options(1,false);
@@ -33,11 +33,6 @@ public class GameFrame extends JFrame{
 
 
 
-        JLabel back_label_bottom = new JLabel("Back");
-        back_label_bottom.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-        back_label_bottom.setBounds(20,625,300,50);
-
-
         add(main);
         setSize(BOARD_WIDTH,BOARD_HEIGHT);
         setLayout(null);
@@ -49,7 +44,6 @@ public class GameFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 remove(main);
-                add(back_label_bottom);
                 boardFrame = new GridPanel(new Board(options));
                 add(boardFrame);
                 repaint();
@@ -67,16 +61,6 @@ public class GameFrame extends JFrame{
             }
         });
 
-        // bottom button to exit game and set new options or reload frame
-        back_label_bottom.addMouseListener(new MouseInputAdapter(){
-            @Override
-            public void mousePressed(MouseEvent e){
-                remove(boardFrame);
-                remove(back_label_bottom);
-                add(main);
-                repaint();
-            }
-        });
 
         // a difficulty label for the options screen
         diff_label.addMouseListener(new MouseInputAdapter(){
