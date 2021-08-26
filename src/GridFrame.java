@@ -36,6 +36,7 @@ public class GridFrame extends JPanel{
                             if (key > 48 && key < 60){
                                 if (checkMove(key-48,y_coord,x_coord)){
                                     label[x_coord][y_coord].setText(String.valueOf(key-48));
+                                    puzzle[x_coord][y_coord] = key-48;
                                     label[x_coord][y_coord].setForeground(Color.blue);
                                         
                                 } else {
@@ -46,6 +47,7 @@ public class GridFrame extends JPanel{
                             }
                             if (key == 8){
                                 label[x_coord][y_coord].setText("");
+                                puzzle[x_coord][y_coord] = 0;
                             }
                         }
                             
@@ -66,16 +68,16 @@ public class GridFrame extends JPanel{
         }
     }
     private boolean checkRow(int val, int index){
-        for (int i = 0; i < label.length; i++){
-            if (label[i][index].getText().equals(String.valueOf(val))){
+        for (int i = 0; i < puzzle.length; i++){
+            if (puzzle[i][index] == val){
                return false;
             }
         }
         return true;
     }
     private boolean checkColumn(int val, int index){
-        for (int i = 0; i < label.length; i++){
-            if (label[index][i].getText().equals(String.valueOf(val))){
+        for (int i = 0; i < puzzle.length; i++){
+            if (puzzle[index][i] == val){
               return false;
             }
         }
@@ -91,7 +93,7 @@ public class GridFrame extends JPanel{
 
         for (int i = min_x; i < max_x; i++){
             for (int j = min_y; j < max_y; j++){
-                if (label[i][j].getText().equals(String.valueOf(val))){
+                if (puzzle[i][j] == val){
                   return false;            
                }
             }
