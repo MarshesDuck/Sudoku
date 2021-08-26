@@ -13,10 +13,7 @@ public class GameFrame extends JFrame{
     private final int BOARD_WIDTH = 630;
     private final int BOARD_HEIGHT = 700;
     public GameFrame(){
-        // default options
-        JPanel current = null;
-
-
+        
         options = new Options(1,false);
         main = new MainPanel();
         optionsFrame = new OptionsPanel();
@@ -42,7 +39,6 @@ public class GameFrame extends JFrame{
 
 
         add(main);
-        current = main;
         setSize(BOARD_WIDTH,BOARD_HEIGHT);
         setLayout(null);
         setVisible(true);
