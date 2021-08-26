@@ -10,13 +10,40 @@ public class GameFrame extends JFrame{
     OptionsPanel optionsFrame;
     Options options;
     Board board;
+    private final int BOARD_WIDTH = 630;
+    private final int BOARD_HEIGHT = 700;
     public GameFrame(){
         // default options
+        JPanel current = null;
+
+
         options = new Options(1,false);
         main = new MainPanel();
         optionsFrame = new OptionsPanel();
+
+        JLabel back_label = new JLabel("Back");
+        JLabel diff_label = new JLabel("Difficulty : 1");
+        JLabel high_label = new JLabel("Highlighting : OFF");
+        
+
+        diff_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+        high_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+        back_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+
+        diff_label.setBounds(150,200,300,50);
+        high_label.setBounds(150,250,300,50);
+        back_label.setBounds(150,400,300,50);
+
+
+
+        JLabel back_label_bottom = new JLabel("Back");
+        back_label_bottom.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+        back_label_bottom.setBounds(20,625,300,50);
+
+
         add(main);
-        setSize(640,665);
+        current = main;
+        setSize(BOARD_WIDTH,BOARD_HEIGHT);
         setLayout(null);
         setVisible(true);
         setResizable(false);
@@ -26,6 +53,7 @@ public class GameFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 remove(main);
+                add(back_label_bottom);
                 boardFrame = new GridPanel(new Board(options));
                 add(boardFrame);
                 repaint();
@@ -35,7 +63,53 @@ public class GameFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 remove(main);
+                add(back_label);
+                add(high_label);
+                add(diff_label);
                 add(optionsFrame);
+                repaint();
+            }
+        });
+
+        // bottom button to exit game and set new options or reload frame
+        back_label_bottom.addMouseListener(new MouseInputAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e){
+                remove(boardFrame);
+                remove(back_label_bottom);
+                add(main);
+                repaint();
+            }
+        });
+
+        // a difficulty label for the options screen
+        diff_label.addMouseListener(new MouseInputAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e){
+                options.setDifficulty((options.getDifficulty()+1)%4);
+                diff_label.setText("Difficulty : "+options.getDifficulty());
+            }
+        });
+
+        // a highlight label for the options screen
+        high_label.addMouseListener(new MouseInputAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e){
+                options.setHighlighting(!options.getHighlighting());
+                String value = options.getHighlighting() ? "ON" : "OFF";
+                high_label.setText("Highlighting : "+value);
+            }
+        });
+
+        // a back label for the options screen
+        back_label.addMouseListener(new MouseInputAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e){
+                remove(optionsFrame);
+                remove(back_label);
+                remove(diff_label);
+                remove(high_label);
+                add(main);
                 repaint();
             }
         });
@@ -75,7 +149,7 @@ public class GameFrame extends JFrame{
     
             add(panel);
     
-            setSize(640,665);
+            setSize(BOARD_WIDTH,BOARD_HEIGHT);
             setLayout(null);
             setVisible(true);
     
@@ -96,48 +170,11 @@ public class GameFrame extends JFrame{
         private ImageImplement panel;
         public OptionsPanel(){
        
-            panel = new ImageImplement(new ImageIcon("assets/optionScreen.jpeg").getImage());
+            panel = new ImageImplement(new ImageIcon("assets/optionScreen.png").getImage());
     
-            JLabel diff_label = new JLabel("Difficulty : 1");
-            JLabel high_label = new JLabel("Highlighting : OFF");
-            JLabel back_label = new JLabel("Back");
-    
-            diff_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-            high_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-            back_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-    
-            diff_label.setBounds(150,200,300,50);
-            high_label.setBounds(150,250,300,50);
-            back_label.setBounds(150,400,300,50);
-    
-            diff_label.addMouseListener(new MouseInputAdapter(){
-                @Override
-                public void mousePressed(MouseEvent e){
-                    options.setDifficulty((options.getDifficulty()+1)%4);
-                    diff_label.setText("Difficulty : "+options.getDifficulty());
-                }
-            });
-            high_label.addMouseListener(new MouseInputAdapter(){
-                @Override
-                public void mousePressed(MouseEvent e){
-                    options.setHighlighting(!options.getHighlighting());
-                    String value = options.getHighlighting() ? "ON" : "OFF";
-                    high_label.setText("Highlighting : "+value);
-                }
-            });
-            back_label.addMouseListener(new MouseInputAdapter(){
-                @Override
-                public void mousePressed(MouseEvent e){
-                    
-                }
-            });
-    
-            add(diff_label);
-            add(high_label);
-            add(back_label);
     
             add(panel);
-            setSize(640,660);
+            setSize(BOARD_WIDTH,BOARD_HEIGHT);
             setLayout(null);
             setVisible(true);
     
