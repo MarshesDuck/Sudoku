@@ -34,7 +34,7 @@ public class GridFrame extends JPanel{
                         public void keyPressed(KeyEvent e){
                             int key = e.getKeyCode();
                             if (key > 48 && key < 60){
-                                if (checkMove(key-48,y_coord,x_coord)){
+                                if (checkMove(key-48,x_coord,y_coord)){
                                     label[x_coord][y_coord].setText(String.valueOf(key-48));
                                     puzzle[x_coord][y_coord] = key-48;
                                     label[x_coord][y_coord].setForeground(Color.blue);
@@ -100,7 +100,7 @@ public class GridFrame extends JPanel{
         }
         return true;
     }
-    private boolean checkMove(int val, int y_coord, int x_coord){
+    private boolean checkMove(int val, int x_coord, int y_coord){
         return (checkRow(val,y_coord) && checkColumn(val,x_coord) && checkBox(val,x_coord,y_coord));
     }
 }
