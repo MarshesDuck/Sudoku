@@ -89,15 +89,12 @@ public class GridFrame extends JPanel{
         int min_x = x_coord >= 6 ? 6 : x_coord >= 3 ? 3 : x_coord >= 0 ? 0 : 9;
         int min_y = y_coord >= 6 ? 6 : y_coord >= 3 ? 3 : y_coord >= 0 ? 0 : 9;
 
-
-        for (int i = min_y; i < max_y; i++){
-            for (int j = min_x; j < max_x; j++){
+        for (int i = min_x; i < max_x; i++){
+            for (int j = min_y; j < max_y; j++){
                 if (label[i][j].getText().equals(String.valueOf(val))){
-                    return false;
-                }
-                
+                  return false;            
+               }
             }
-
         }
         return true;
     }
