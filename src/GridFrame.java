@@ -32,17 +32,23 @@ public class GridFrame extends JPanel{
                     label[i][j] = new JLabel();
                     label[i][j].addKeyListener(new KeyAdapter(){
                         public void keyPressed(KeyEvent e){
-                            //System.out.println("Pressed key "+e.getKeyCode());
                             int key = e.getKeyCode();
                             if (key > 48 && key < 60){
-                                label[x_coord][y_coord].setText(String.valueOf(key-48));
+                                if (checkMove(key-48,y_coord,x_coord)){
+                                    label[x_coord][y_coord].setText(String.valueOf(key-48));
+                                    label[x_coord][y_coord].setForeground(Color.blue);
+                                        
+                                } else {
+                                    label[x_coord][y_coord].setText(String.valueOf(key-48));
+                                    label[x_coord][y_coord].setForeground(Color.red);
+                                }
+                                
                             }
                             if (key == 8){
                                 label[x_coord][y_coord].setText("");
                             }
-                            label[x_coord][y_coord].setForeground(Color.blue);
                         }
-
+                            
                     });
                     label[i][j].addMouseListener(new MouseInputAdapter(){
                         @Override
@@ -51,7 +57,6 @@ public class GridFrame extends JPanel{
                         }
                     });
                 }
-                //label[i][j].setOpaque(true);
                 label[i][j].setFocusable(true);
                 label[i][j].setFont(new Font("Comic Sans MS",Font.BOLD,24));
                 label[i][j].setHorizontalAlignment(JLabel.CENTER);
@@ -59,5 +64,44 @@ public class GridFrame extends JPanel{
                 panel.add(label[i][j]);
             }
         }
+    }
+    private boolean checkRow(int val, int index){
+        for (int i = 0; i < label.length; i++){
+            if (label[i][index].getText().equals(String.valueOf(val))){
+               return false;
+            }
+        }
+        return true;
+    }
+    private boolean checkColumn(int val, int index){
+        for (int i = 0; i < label.length; i++){
+            if (label[index][i].getText().equals(String.valueOf(val))){
+              return false;
+            }
+        }
+        return true;
+    }
+    private boolean checkBox(int val, int x_coord, int y_coord){
+        
+        int max_x = x_coord < 3 ? 3 : x_coord < 6 ? 6 : x_coord < 9 ? 9 : 0;
+        int max_y = y_coord < 3 ? 3 : y_coord < 6 ? 6 : y_coord < 9 ? 9 : 0;
+
+        int min_x = x_coord >= 6 ? 6 : x_coord >= 3 ? 3 : x_coord >= 0 ? 0 : 9;
+        int min_y = y_coord >= 6 ? 6 : y_coord >= 3 ? 3 : y_coord >= 0 ? 0 : 9;
+
+
+        for (int i = min_y; i < max_y; i++){
+            for (int j = min_x; j < max_x; j++){
+                if (label[i][j].getText().equals(String.valueOf(val))){
+                    return false;
+                }
+                
+            }
+
+        }
+        return true;
+    }
+    private boolean checkMove(int val, int y_coord, int x_coord){
+        return (checkRow(val,y_coord) && checkColumn(val,x_coord) && checkBox(val,x_coord,y_coord));
     }
 }
