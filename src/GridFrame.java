@@ -34,38 +34,13 @@ public class GridFrame extends JPanel{
                         public void keyPressed(KeyEvent e){
                             //System.out.println("Pressed key "+e.getKeyCode());
                             int key = e.getKeyCode();
-                            if (key == 49){
-                                label[x_coord][y_coord].setText("1");
-                            }
-                            if (key == 50){
-                                label[x_coord][y_coord].setText("2");
-                            }
-                            if (key == 51){
-                                label[x_coord][y_coord].setText("3");
-                            }
-                            if (key == 52){
-                                label[x_coord][y_coord].setText("4");
-                            }
-                            if (key == 53){
-                                label[x_coord][y_coord].setText("5");
-                            }
-                            if (key == 54){
-                                label[x_coord][y_coord].setText("6");
-                            }
-                            if (key == 55){
-                                label[x_coord][y_coord].setText("7");
-                            }
-                            if (key == 56){
-                                label[x_coord][y_coord].setText("8");
-                            }
-                            if (key == 59){
-                                label[x_coord][y_coord].setText("9");
+                            if (key > 48 && key < 60){
+                                label[x_coord][y_coord].setText(String.valueOf(key-48));
                             }
                             if (key == 8){
                                 label[x_coord][y_coord].setText("");
                             }
                             label[x_coord][y_coord].setForeground(Color.blue);
-                            
                         }
 
                     });
