@@ -31,8 +31,6 @@ public class GameFrame extends JFrame{
         high_label.setBounds(150,250,300,50);
         back_label.setBounds(150,400,300,50);
 
-
-
         add(main);
         setSize(BOARD_WIDTH,BOARD_HEIGHT);
         setLayout(null);
@@ -149,18 +147,12 @@ public class GameFrame extends JFrame{
     public class OptionsPanel extends JPanel{
         private ImageImplement panel;
         public OptionsPanel(){
-       
             panel = new ImageImplement(new ImageIcon("assets/optionScreen.png").getImage());
-    
-    
             add(panel);
             setSize(BOARD_WIDTH,BOARD_HEIGHT);
             setLayout(null);
             setVisible(true);
-    
-    
-        }
-        
+        }   
     }
     public static void main(String[] args) {
         new GameFrame();
