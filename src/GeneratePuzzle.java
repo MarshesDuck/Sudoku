@@ -45,14 +45,4 @@ public class GeneratePuzzle {
     public int[][] getPuzzle(){
         return puzzle;
     }
-    public static void main(String[] args) {
-        GeneratePuzzle puzzle = new GeneratePuzzle(1);
-        puzzle.newPuzzle(1);
-        for (int i = 0; i < puzzle.puzzle.length; i++){
-            for (int j = 0; j < puzzle.puzzle[i].length; j++){
-                System.out.print(puzzle.puzzle[i][j]+" ");
-            }
-            System.out.println();
-        }
-    }
 }

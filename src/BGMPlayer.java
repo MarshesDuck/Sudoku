@@ -56,9 +56,6 @@ public class BGMPlayer implements LineListener {
                     ex.printStackTrace();
                 }
             }
-
-            //audioClip.close();
-
         } catch (UnsupportedAudioFileException ex) {
             System.out.println("The specified audio file is not supported.");
             ex.printStackTrace();
@@ -71,7 +68,6 @@ public class BGMPlayer implements LineListener {
         }
 
     }
-
     /**
      * Listens to the START and STOP events of the audio line.
      */
@@ -88,18 +84,4 @@ public class BGMPlayer implements LineListener {
         }
 
     }
-
-//    public static void main(String[] args) {
-//        String audioFilePath = "Music/BGM.wav";
-//        BGMPlayer player = new BGMPlayer();
-//        player.play(audioFilePath);
-//        boolean running = true;
-//        while (running){
-//            if (player.playCompleted){
-//                player.playCompleted = false;
-//                player.play(audioFilePath);
-//            }
-//        }
-//    }
-
 }
