@@ -197,19 +197,6 @@ public class GameFrame extends JFrame{
             setVisible(true);
         }   
     }
-    public class MenuBar extends JMenuBar{
-        private JMenuItem newGame;
-        private JMenuItem optionsMenu;
-        public MenuBar(){
-
-            JMenu menu = new JMenu("Game Menu");
-            add(menu);
-
-
-
-        }
-
-    }
     public static void main(String[] args) {
         new GameFrame();
     }
