@@ -6,11 +6,9 @@ public class Board {
     private int[][] puzzle;
     private JLabel[][] label;
     private Options options;
-    private GeneratePuzzle puzzleGenerator;
-    public Board(Options options){
+    public Board(int[][] puzzle,Options options){
         this.options = options;
-        puzzleGenerator = new GeneratePuzzle(options.getDifficulty());
-        puzzle = puzzleGenerator.getPuzzle();
+        this.puzzle = puzzle;
     }
     public void createLabels(JPanel panel){
         label = new JLabel[9][9];
@@ -29,7 +27,6 @@ public class Board {
                                 if (options.getHighlighting()){
                                     if (checkMove(key-48,x_coord,y_coord)){
                                         label[x_coord][y_coord].setText(String.valueOf(key-48));
-                                        puzzle[x_coord][y_coord] = key-48;
                                         label[x_coord][y_coord].setForeground(Color.blue);
                                             
                                     } else {
@@ -38,17 +35,14 @@ public class Board {
                                     }
                                 } else {
                                     label[x_coord][y_coord].setText(String.valueOf(key-48));
-                                    puzzle[x_coord][y_coord] = key-48;
                                     label[x_coord][y_coord].setForeground(Color.blue);
                                 }
                                 
                             }
                             if (key == 8){
                                 label[x_coord][y_coord].setText("");
-                                puzzle[x_coord][y_coord] = 0;
                             }
                         }
-                            
                     });
                     label[i][j].addMouseListener(new MouseInputAdapter(){
                         @Override
@@ -67,7 +61,7 @@ public class Board {
     }
     private boolean checkRow(int val, int index){
         for (int i = 0; i < puzzle.length; i++){
-            if (puzzle[i][index] == val){
+            if (label[i][index].getText().equals(String.valueOf(val))){
                return false;
             }
         }
@@ -75,7 +69,7 @@ public class Board {
     }
     private boolean checkColumn(int val, int index){
         for (int i = 0; i < puzzle.length; i++){
-            if (puzzle[index][i] == val){
+            if (label[index][i].getText().equals(String.valueOf(val))){
               return false;
             }
         }
@@ -91,7 +85,7 @@ public class Board {
 
         for (int i = min_x; i < max_x; i++){
             for (int j = min_y; j < max_y; j++){
-                if (puzzle[i][j] == val){
+                if (label[i][j].getText().equals(String.valueOf(val))){
                   return false;            
                }
             }
