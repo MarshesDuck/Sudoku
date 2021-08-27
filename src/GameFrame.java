@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GameFrame extends JFrame{
     GridPanel boardFrame;
+    Board board;
+    JLabel[][] labels;
     
     private MainPanel main;
     private JMenuBar menuBar;
@@ -22,11 +24,14 @@ public class GameFrame extends JFrame{
     public GameFrame(){
 
         menuBar = new JMenuBar();
+
         JMenu menu = new JMenu("Game Menu");
         menuBar.add(menu);
+
         JMenuItem newGame = new JMenuItem("New Game");
         JMenuItem optionsMenu = new JMenuItem("Options");
         JMenuItem mainMenu = new JMenuItem("Main Menu");
+
         menu.add(newGame);
         menu.add(optionsMenu);
         menu.add(mainMenu);
@@ -39,6 +44,8 @@ public class GameFrame extends JFrame{
         puzzleGenerator = new GeneratePuzzle(options.getDifficulty());
         puzzle = puzzleGenerator.getPuzzle();
 
+
+ 
         JLabel back_label = new JLabel("Back");
         JLabel diff_label = new JLabel("Difficulty : 1");
         JLabel high_label = new JLabel("Highlighting : OFF");
@@ -64,8 +71,15 @@ public class GameFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 getContentPane().removeAll();
-                boardFrame = new GridPanel(new Board(puzzle,options));
-                add(boardFrame);
+                if (board == null){
+                    board = new Board(puzzle,options);
+                    boardFrame = new GridPanel(board);
+                    labels = board.getLabels();
+                    add(boardFrame);
+                } else {
+                    board.repaintLabels(labels);
+                    add(boardFrame);
+                }
                 repaint();
             }
         });
@@ -85,7 +99,9 @@ public class GameFrame extends JFrame{
             public void actionPerformed(ActionEvent e){
                 getContentPane().removeAll();
                 puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
-                boardFrame = new GridPanel(new Board(puzzle,options));
+                board = new Board(puzzle,options);
+                boardFrame = new GridPanel(board);
+                labels = board.getLabels();
                 add(boardFrame);
                 repaint();
             }
@@ -110,6 +126,9 @@ public class GameFrame extends JFrame{
             public void mousePressed(MouseEvent e){
                 options.setDifficulty((options.getDifficulty()+1)%4);
                 puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
+                board = new Board(puzzle,options);
+                boardFrame = new GridPanel(board);
+                labels = board.getLabels();
                 diff_label.setText("Difficulty : "+options.getDifficulty());
             }
         });
