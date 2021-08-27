@@ -28,7 +28,7 @@ public class GeneratePuzzle {
         }
         return null;
     }
-    public void newPuzzle(int level){
+    public int[][] newPuzzle(int level){
         String FORMAT = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=%d&level=%d";
         String url = String.format(FORMAT,SIZE,level);
         String response = sendGet(url);
@@ -41,6 +41,7 @@ public class GeneratePuzzle {
             JSONObject curr = arr.getJSONObject(i);
             puzzle[curr.getInt("x")][curr.getInt("y")] = curr.getInt("value");
         }
+        return puzzle;
     }
     public int[][] getPuzzle(){
         return puzzle;
