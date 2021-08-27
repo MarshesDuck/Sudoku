@@ -85,11 +85,11 @@ public class Board {
     }
     private boolean checkBox(String val, int x_coord, int y_coord){
         
-        int max_x = x_coord < 3 ? 3 : x_coord < 6 ? 6 : x_coord < 9 ? 9 : 0;
-        int max_y = y_coord < 3 ? 3 : y_coord < 6 ? 6 : y_coord < 9 ? 9 : 0;
+        int max_x = x_coord < 3 ? 3 : x_coord < 6 ? 6 : 9;
+        int max_y = y_coord < 3 ? 3 : y_coord < 6 ? 6 : 9;
 
-        int min_x = x_coord >= 6 ? 6 : x_coord >= 3 ? 3 : x_coord >= 0 ? 0 : 9;
-        int min_y = y_coord >= 6 ? 6 : y_coord >= 3 ? 3 : y_coord >= 0 ? 0 : 9;
+        int min_x = x_coord >= 6 ? 6 : x_coord >= 3 ? 3 : 0;
+        int min_y = y_coord >= 6 ? 6 : y_coord >= 3 ? 3 : 0;
 
         for (int i = min_x; i < max_x; i++){
             for (int j = min_y; j < max_y; j++){
