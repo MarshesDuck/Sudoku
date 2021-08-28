@@ -5,9 +5,9 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GameFrame extends JFrame{
-    GridPanel boardFrame;
-    Board board;
-    JLabel[][] labels;
+    private GridPanel boardFrame;
+    private Board board;
+    private JLabel[][] labels;
     
     private MainPanel main;
     private JMenuBar menuBar;
