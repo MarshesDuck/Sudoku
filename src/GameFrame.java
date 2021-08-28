@@ -5,6 +5,7 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GameFrame extends JFrame{
+
     private GridPanel boardFrame;
     private Board board;
     private JLabel[][] labels;
@@ -13,6 +14,7 @@ public class GameFrame extends JFrame{
     
     private OptionsPanel optionsFrame;
     private Options options;
+    private boolean optionsChanged;
 
     private GeneratePuzzle puzzleGenerator;
     private int[][] puzzle;
@@ -20,20 +22,16 @@ public class GameFrame extends JFrame{
     private final int BOARD_WIDTH = 630;
     private final int BOARD_HEIGHT = 680;
 
-    private JLabel back_label;
-    private JLabel diff_label;
-    private JLabel high_label;
-    private JLabel music_label;
-
     private JMenuBar menuBar;
+
     private JMenuItem newMenu;
     private JMenuItem optionsMenu;
     private JMenuItem mainMenu;
     private JMenuItem resumeMenu;
 
     private BGMPlayer player;
+    private String audioFile = "Music/BGM.wav";
 
-    
     public GameFrame(){
 
         menuBar = new MenuBar();
@@ -42,9 +40,9 @@ public class GameFrame extends JFrame{
 
         optionsFrame = new OptionsPanel();
         options = new Options(1,false,true);
+        optionsChanged = false;
 
-        puzzleGenerator = new GeneratePuzzle(options.getDifficulty());
-        puzzle = puzzleGenerator.getPuzzle();
+        puzzleGenerator = new GeneratePuzzle();
 
         player = new BGMPlayer();
 
@@ -56,76 +54,27 @@ public class GameFrame extends JFrame{
         setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        music();
+        player.play(audioFile);
 
     }
     public void Listeners(){
-        main.startButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getContentPane().removeAll();
-                if (board == null){
-                    board = new Board(puzzle,options);
-                    boardFrame = new GridPanel(board);
-                    labels = board.getLabels();
-                    add(boardFrame);
-                } else {
-                    board.repaintLabels(labels);
-                    add(boardFrame);
-                }
-                repaint();
-            }
-        });
-        main.optionButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getContentPane().removeAll();
-                add(back_label);
-                add(high_label);
-                add(diff_label);
-                add(music_label);
-                add(optionsFrame);
-                repaint();
-            }
-        });
+
         resumeMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                getContentPane().removeAll();
-                if (board == null){
-                    board = new Board(puzzle,options);
-                    boardFrame = new GridPanel(board);
-                    labels = board.getLabels();
-                    add(boardFrame);
-                } else {
-                    board.repaintLabels(labels);
-                    add(boardFrame);
-                }
-                repaint();
+                refreshBoard(false);
             }
         });
         newMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                getContentPane().removeAll();
-                puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
-                board = new Board(puzzle,options);
-                boardFrame = new GridPanel(board);
-                labels = board.getLabels();
-                add(boardFrame);
-                repaint();
+                refreshBoard(true);
             }
         });
         optionsMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                getContentPane().removeAll();
-                add(back_label);
-                add(high_label);
-                add(diff_label);
-                add(music_label);
-                add(optionsFrame);
-                repaint();
+                addOptions();
             }
         });
         mainMenu.addActionListener(new ActionListener(){
@@ -136,68 +85,92 @@ public class GameFrame extends JFrame{
                 repaint();
             }
         });
+
+        main.startButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refreshBoard(false);
+            }
+        });
+        main.optionButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addOptions();
+            }
+        });
+
         // a difficulty label for the options screen
-        diff_label.addMouseListener(new MouseInputAdapter(){
+        optionsFrame.diff_label.addMouseListener(new MouseInputAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
                 options.setDifficulty((options.getDifficulty()+1)%4);
-                puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
-                board = new Board(puzzle,options);
-                boardFrame = new GridPanel(board);
-                labels = board.getLabels();
-                diff_label.setText("Difficulty : "+options.getDifficulty());
+                optionsChanged = true;
+                optionsFrame.diff_label.setText("Difficulty : "+options.getDifficulty());
             }
         });
         // a highlight label for the options screen
-        high_label.addMouseListener(new MouseInputAdapter(){
+        optionsFrame.high_label.addMouseListener(new MouseInputAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
                 options.setHighlighting(!options.getHighlighting());
                 String value = options.getHighlighting() ? "ON" : "OFF";
-                high_label.setText("Highlighting : "+value);
+                optionsFrame.high_label.setText("Highlighting : "+value);
             }
         });
         // a back label for the options screen
-        back_label.addMouseListener(new MouseInputAdapter(){
+        optionsFrame.back_label.addMouseListener(new MouseInputAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
-                getContentPane().removeAll();
-                if (board == null){
-                    board = new Board(puzzle,options);
-                    boardFrame = new GridPanel(board);
-                    labels = board.getLabels();
-                    add(boardFrame);
-                } else {
-                    board.repaintLabels(labels);
-                    add(boardFrame);
-                }
-                repaint();
+                refreshBoard(false);
             }
         });
-        music_label.addMouseListener(new MouseInputAdapter(){
+        optionsFrame.music_label.addMouseListener(new MouseInputAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
                 options.setMusic(!options.getMusic());
-                player.playCompleted = true;
-                String value = options.getMusic() ? "ON" : "OFF";
-                music_label.setText("Music : "+value);
+                String value = "";
+                if (options.getMusic()){
+                    player.play(audioFile);
+                    value = "ON";
+
+                } else {
+                    player.close();
+                    value = "OFF";
+                }
+                optionsFrame.music_label.setText("Music : "+value);
             }
         });
     }
-    public void music (){
-        player.play("Music/BGM.wav");
-        while (options.getMusic()){
-            if (player.playCompleted){
-                player.playCompleted = false;
-                player.play("Music/BGM.wav");
-            }
+    public void refreshBoard(boolean veryNew){
+        getContentPane().removeAll();
+        if (board == null || optionsChanged || veryNew){
+            puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
+            board = new Board(puzzle,options);
+            boardFrame = new GridPanel(board);
+            labels = board.getLabels();
+            optionsChanged = false;
+            add(boardFrame);
+        } else {
+            board.repaintLabels(labels);
+            add(boardFrame);
         }
+        repaint();
+    }
+    public void addOptions(){
+        getContentPane().removeAll();
+        add(optionsFrame.back_label);
+        add(optionsFrame.high_label);
+        add(optionsFrame.diff_label);
+        add(optionsFrame.music_label);
+        add(optionsFrame);
+        repaint();
     }
     public class MainPanel extends JPanel {
-        JButton startButton;
-        JButton optionButton;
+        private JButton startButton;
+        private JButton optionButton;
+        private ImageImplement mainImage;
         public MainPanel(){
-            ImageImplement panel = new ImageImplement(new ImageIcon("assets/titleScreen.png").getImage());
+            mainImage = new ImageImplement(new ImageIcon("assets/titleScreen.png").getImage());
             
             startButton = new JButton();
             optionButton = new JButton();
@@ -216,7 +189,7 @@ public class GameFrame extends JFrame{
             add(startButton);
             add(optionButton);
     
-            add(panel);
+            add(mainImage);
     
             setSize(BOARD_WIDTH,BOARD_HEIGHT);
             setLayout(null);
@@ -225,20 +198,27 @@ public class GameFrame extends JFrame{
         }
     }
     public class GridPanel extends JPanel{
-        private ImageImplement panel;
+        private ImageImplement boardImage;
         GridPanel(Board board){
-            panel = new ImageImplement(new ImageIcon("assets/board.png").getImage());
-            add(panel);
-            board.createLabels(panel);
+            boardImage = new ImageImplement(new ImageIcon("assets/board.png").getImage());
+            add(boardImage);
+            board.createLabels(boardImage);
             setSize(640,660);
             setLayout(null);
             setVisible(true);
         }
     }
     public class OptionsPanel extends JPanel{
-        private ImageImplement panel;
+
+        private ImageImplement optionsImage;
+
+        private JLabel back_label;
+        private JLabel diff_label;
+        private JLabel high_label;
+        private JLabel music_label;
+
         public OptionsPanel(){
-            panel = new ImageImplement(new ImageIcon("assets/optionScreen.png").getImage());
+            optionsImage = new ImageImplement(new ImageIcon("assets/optionScreen.png").getImage());
             
             back_label = new JLabel("Back to game");
             diff_label = new JLabel("Difficulty : 1");
@@ -256,7 +236,7 @@ public class GameFrame extends JFrame{
             back_label.setBounds(150,400,300,50);
             music_label.setBounds(150,300,300,50);
             
-            add(panel);
+            add(optionsImage);
             setSize(BOARD_WIDTH,BOARD_HEIGHT);
             setLayout(null);
             setVisible(true);

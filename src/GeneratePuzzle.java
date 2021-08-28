@@ -4,9 +4,6 @@ import org.json.*;
 public class GeneratePuzzle {
     private final int SIZE = 9;
     private int[][] puzzle = new int[SIZE][SIZE];
-    public GeneratePuzzle(int level){
-        newPuzzle(level);
-    }
     private String sendGet(String urlString){
         HttpURLConnection con = null;
         try {
