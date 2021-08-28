@@ -10,6 +10,24 @@ public class Board {
         this.options = options;
         this.puzzle = puzzle;
     }
+    public void repaintLabels(JLabel[][] labels){
+        for (int i = 0; i < labels.length; i++){
+            for (int j = 0; j < labels.length; j++){
+                if (labels[i][j] != null && puzzle[i][j] == 0){
+                    label[i][j].setText(label[i][j].getText());
+                    if (options.getHighlighting()){
+                        if (checkMove(labels[i][j].getText(),i,j)){
+                            label[i][j].setForeground(Color.blue);
+                        } else {
+                            label[i][j].setForeground(Color.red);
+                        }
+                    } else {
+                        label[i][j].setForeground(Color.blue);
+                    }
+                }
+            }
+        }
+    }
     public void createLabels(JPanel panel){
         label = new JLabel[9][9];
         for (int i = 0; i < label.length; i++){
@@ -24,23 +42,13 @@ public class Board {
                         public void keyPressed(KeyEvent e){
                             int key = e.getKeyCode();
                             if (key > 48 && key < 60){
-                                if (options.getHighlighting()){
-                                    if (checkMove(key-48,x_coord,y_coord)){
-                                        label[x_coord][y_coord].setText(String.valueOf(key-48));
-                                        label[x_coord][y_coord].setForeground(Color.blue);
-                                            
-                                    } else {
-                                        label[x_coord][y_coord].setText(String.valueOf(key-48));
-                                        label[x_coord][y_coord].setForeground(Color.red);
-                                    }
-                                } else {
-                                    label[x_coord][y_coord].setText(String.valueOf(key-48));
-                                    label[x_coord][y_coord].setForeground(Color.blue);
-                                }
+                                label[x_coord][y_coord].setText(String.valueOf(key-48));
+                                repaintLabels(label);
                                 
                             }
                             if (key == 8){
                                 label[x_coord][y_coord].setText("");
+                                repaintLabels(label);
                             }
                         }
                     });
@@ -59,41 +67,41 @@ public class Board {
             }
         }
     }
-    private boolean checkRow(int val, int index){
+    private boolean checkRow(String val, int x_coord, int y_coord){
         for (int i = 0; i < puzzle.length; i++){
-            if (label[i][index].getText().equals(String.valueOf(val))){
+            if (i != x_coord && label[i][y_coord].getText().equals(val)){
                return false;
             }
         }
         return true;
     }
-    private boolean checkColumn(int val, int index){
+    private boolean checkColumn(String val, int x_coord, int y_coord){
         for (int i = 0; i < puzzle.length; i++){
-            if (label[index][i].getText().equals(String.valueOf(val))){
+            if (i != y_coord && label[x_coord][i].getText().equals(val)){
               return false;
             }
         }
         return true;
     }
-    private boolean checkBox(int val, int x_coord, int y_coord){
+    private boolean checkBox(String val, int x_coord, int y_coord){
         
-        int max_x = x_coord < 3 ? 3 : x_coord < 6 ? 6 : x_coord < 9 ? 9 : 0;
-        int max_y = y_coord < 3 ? 3 : y_coord < 6 ? 6 : y_coord < 9 ? 9 : 0;
+        int max_x = x_coord < 3 ? 3 : x_coord < 6 ? 6 : 9;
+        int max_y = y_coord < 3 ? 3 : y_coord < 6 ? 6 : 9;
 
-        int min_x = x_coord >= 6 ? 6 : x_coord >= 3 ? 3 : x_coord >= 0 ? 0 : 9;
-        int min_y = y_coord >= 6 ? 6 : y_coord >= 3 ? 3 : y_coord >= 0 ? 0 : 9;
+        int min_x = x_coord >= 6 ? 6 : x_coord >= 3 ? 3 : 0;
+        int min_y = y_coord >= 6 ? 6 : y_coord >= 3 ? 3 : 0;
 
         for (int i = min_x; i < max_x; i++){
             for (int j = min_y; j < max_y; j++){
-                if (label[i][j].getText().equals(String.valueOf(val))){
+                if (i != x_coord && j != y_coord && label[i][j].getText().equals(val)){
                   return false;            
                }
             }
         }
         return true;
     }
-    private boolean checkMove(int val, int x_coord, int y_coord){
-        return (checkRow(val,y_coord) && checkColumn(val,x_coord) && checkBox(val,x_coord,y_coord));
+    private boolean checkMove(String val, int x_coord, int y_coord){
+        return (checkRow(val,x_coord,y_coord) && checkColumn(val,x_coord,y_coord) && checkBox(val,x_coord,y_coord));
     }
     public JLabel[][] getLabels(){
         return label;

@@ -5,10 +5,11 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GameFrame extends JFrame{
-    GridPanel boardFrame;
+    private GridPanel boardFrame;
+    private Board board;
+    private JLabel[][] labels;
     
     private MainPanel main;
-    private JMenuBar menuBar;
     
     private OptionsPanel optionsFrame;
     private Options options;
@@ -18,54 +19,60 @@ public class GameFrame extends JFrame{
     
     private final int BOARD_WIDTH = 630;
     private final int BOARD_HEIGHT = 680;
+
+    private JLabel back_label;
+    private JLabel diff_label;
+    private JLabel high_label;
+    private JLabel music_label;
+
+    private JMenuBar menuBar;
+    private JMenuItem newMenu;
+    private JMenuItem optionsMenu;
+    private JMenuItem mainMenu;
+    private JMenuItem resumeMenu;
+
+    private BGMPlayer player;
+
     
     public GameFrame(){
 
-        menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Game Menu");
-        menuBar.add(menu);
-        JMenuItem newGame = new JMenuItem("New Game");
-        JMenuItem optionsMenu = new JMenuItem("Options");
-        JMenuItem mainMenu = new JMenuItem("Main Menu");
-        menu.add(newGame);
-        menu.add(optionsMenu);
-        menu.add(mainMenu);
-
+        menuBar = new MenuBar();
 
         main = new MainPanel();
+
         optionsFrame = new OptionsPanel();
-        options = new Options(1,false);
+        options = new Options(1,false,true);
 
         puzzleGenerator = new GeneratePuzzle(options.getDifficulty());
         puzzle = puzzleGenerator.getPuzzle();
 
-        JLabel back_label = new JLabel("Back");
-        JLabel diff_label = new JLabel("Difficulty : 1");
-        JLabel high_label = new JLabel("Highlighting : OFF");
-        
-
-        diff_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-        high_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-        back_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
-
-        diff_label.setBounds(150,200,300,50);
-        high_label.setBounds(150,250,300,50);
-        back_label.setBounds(150,400,300,50);
+        player = new BGMPlayer();
 
         setJMenuBar(menuBar);
         add(main);
         setSize(BOARD_WIDTH,BOARD_HEIGHT);
+        Listeners();
         setLayout(null);
         setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        music();
 
+    }
+    public void Listeners(){
         main.startButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 getContentPane().removeAll();
-                boardFrame = new GridPanel(new Board(puzzle,options));
-                add(boardFrame);
+                if (board == null){
+                    board = new Board(puzzle,options);
+                    boardFrame = new GridPanel(board);
+                    labels = board.getLabels();
+                    add(boardFrame);
+                } else {
+                    board.repaintLabels(labels);
+                    add(boardFrame);
+                }
                 repaint();
             }
         });
@@ -76,16 +83,35 @@ public class GameFrame extends JFrame{
                 add(back_label);
                 add(high_label);
                 add(diff_label);
+                add(music_label);
                 add(optionsFrame);
                 repaint();
             }
         });
-        newGame.addActionListener(new ActionListener(){
+        resumeMenu.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                getContentPane().removeAll();
+                if (board == null){
+                    board = new Board(puzzle,options);
+                    boardFrame = new GridPanel(board);
+                    labels = board.getLabels();
+                    add(boardFrame);
+                } else {
+                    board.repaintLabels(labels);
+                    add(boardFrame);
+                }
+                repaint();
+            }
+        });
+        newMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 getContentPane().removeAll();
                 puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
-                boardFrame = new GridPanel(new Board(puzzle,options));
+                board = new Board(puzzle,options);
+                boardFrame = new GridPanel(board);
+                labels = board.getLabels();
                 add(boardFrame);
                 repaint();
             }
@@ -93,7 +119,13 @@ public class GameFrame extends JFrame{
         optionsMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-
+                getContentPane().removeAll();
+                add(back_label);
+                add(high_label);
+                add(diff_label);
+                add(music_label);
+                add(optionsFrame);
+                repaint();
             }
         });
         mainMenu.addActionListener(new ActionListener(){
@@ -110,6 +142,9 @@ public class GameFrame extends JFrame{
             public void mousePressed(MouseEvent e){
                 options.setDifficulty((options.getDifficulty()+1)%4);
                 puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
+                board = new Board(puzzle,options);
+                boardFrame = new GridPanel(board);
+                labels = board.getLabels();
                 diff_label.setText("Difficulty : "+options.getDifficulty());
             }
         });
@@ -126,19 +161,32 @@ public class GameFrame extends JFrame{
         back_label.addMouseListener(new MouseInputAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
-                remove(optionsFrame);
-                remove(back_label);
-                remove(diff_label);
-                remove(high_label);
-                add(main);
+                getContentPane().removeAll();
+                if (board == null){
+                    board = new Board(puzzle,options);
+                    boardFrame = new GridPanel(board);
+                    labels = board.getLabels();
+                    add(boardFrame);
+                } else {
+                    board.repaintLabels(labels);
+                    add(boardFrame);
+                }
                 repaint();
             }
         });
-
-        BGMPlayer player = new BGMPlayer();
+        music_label.addMouseListener(new MouseInputAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e){
+                options.setMusic(!options.getMusic());
+                player.playCompleted = true;
+                String value = options.getMusic() ? "ON" : "OFF";
+                music_label.setText("Music : "+value);
+            }
+        });
+    }
+    public void music (){
         player.play("Music/BGM.wav");
-        boolean running = true;
-        while (running){
+        while (options.getMusic()){
             if (player.playCompleted){
                 player.playCompleted = false;
                 player.play("Music/BGM.wav");
@@ -191,11 +239,45 @@ public class GameFrame extends JFrame{
         private ImageImplement panel;
         public OptionsPanel(){
             panel = new ImageImplement(new ImageIcon("assets/optionScreen.png").getImage());
+            
+            back_label = new JLabel("Back to game");
+            diff_label = new JLabel("Difficulty : 1");
+            high_label = new JLabel("Highlighting : OFF");
+            music_label = new JLabel("Music : ON");
+            
+    
+            diff_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+            high_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+            back_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+            music_label.setFont(new Font("Comic Sans MS",Font.BOLD,24));
+    
+            diff_label.setBounds(150,200,300,50);
+            high_label.setBounds(150,250,300,50);
+            back_label.setBounds(150,400,300,50);
+            music_label.setBounds(150,300,300,50);
+            
             add(panel);
             setSize(BOARD_WIDTH,BOARD_HEIGHT);
             setLayout(null);
             setVisible(true);
         }   
+    }
+    public class MenuBar extends JMenuBar{
+        public MenuBar(){
+            JMenu menu = new JMenu("Game Menu");
+            add(menu);
+
+            resumeMenu = new JMenuItem("resume");
+            newMenu = new JMenuItem("new");
+            optionsMenu = new JMenuItem("options");
+            mainMenu = new JMenuItem("return");
+
+            menu.add(resumeMenu);
+            menu.add(newMenu);
+            menu.add(optionsMenu);
+            menu.add(mainMenu);
+        }
+
     }
     public static void main(String[] args) {
         new GameFrame();
