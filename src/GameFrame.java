@@ -5,6 +5,7 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GameFrame extends JFrame{
+
     private GridPanel boardFrame;
     private Board board;
     private JLabel[][] labels;
@@ -13,6 +14,7 @@ public class GameFrame extends JFrame{
     
     private OptionsPanel optionsFrame;
     private Options options;
+    private boolean optionsChanged;
 
     private GeneratePuzzle puzzleGenerator;
     private int[][] puzzle;
@@ -42,9 +44,9 @@ public class GameFrame extends JFrame{
 
         optionsFrame = new OptionsPanel();
         options = new Options(1,false,true);
+        optionsChanged = false;
 
-        puzzleGenerator = new GeneratePuzzle(options.getDifficulty());
-        puzzle = puzzleGenerator.getPuzzle();
+        puzzleGenerator = new GeneratePuzzle();
 
         player = new BGMPlayer();
 
@@ -63,69 +65,31 @@ public class GameFrame extends JFrame{
         main.startButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                getContentPane().removeAll();
-                if (board == null){
-                    board = new Board(puzzle,options);
-                    boardFrame = new GridPanel(board);
-                    labels = board.getLabels();
-                    add(boardFrame);
-                } else {
-                    board.repaintLabels(labels);
-                    add(boardFrame);
-                }
-                repaint();
+                refreshBoard(false);
             }
         });
         main.optionButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                getContentPane().removeAll();
-                add(back_label);
-                add(high_label);
-                add(diff_label);
-                add(music_label);
-                add(optionsFrame);
-                repaint();
+                addOptions();
             }
         });
         resumeMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                getContentPane().removeAll();
-                if (board == null){
-                    board = new Board(puzzle,options);
-                    boardFrame = new GridPanel(board);
-                    labels = board.getLabels();
-                    add(boardFrame);
-                } else {
-                    board.repaintLabels(labels);
-                    add(boardFrame);
-                }
-                repaint();
+                refreshBoard(false);
             }
         });
         newMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                getContentPane().removeAll();
-                puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
-                board = new Board(puzzle,options);
-                boardFrame = new GridPanel(board);
-                labels = board.getLabels();
-                add(boardFrame);
-                repaint();
+                refreshBoard(true);
             }
         });
         optionsMenu.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                getContentPane().removeAll();
-                add(back_label);
-                add(high_label);
-                add(diff_label);
-                add(music_label);
-                add(optionsFrame);
-                repaint();
+                addOptions();
             }
         });
         mainMenu.addActionListener(new ActionListener(){
@@ -141,10 +105,7 @@ public class GameFrame extends JFrame{
             @Override
             public void mousePressed(MouseEvent e){
                 options.setDifficulty((options.getDifficulty()+1)%4);
-                puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
-                board = new Board(puzzle,options);
-                boardFrame = new GridPanel(board);
-                labels = board.getLabels();
+                optionsChanged = true;
                 diff_label.setText("Difficulty : "+options.getDifficulty());
             }
         });
@@ -161,17 +122,7 @@ public class GameFrame extends JFrame{
         back_label.addMouseListener(new MouseInputAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
-                getContentPane().removeAll();
-                if (board == null){
-                    board = new Board(puzzle,options);
-                    boardFrame = new GridPanel(board);
-                    labels = board.getLabels();
-                    add(boardFrame);
-                } else {
-                    board.repaintLabels(labels);
-                    add(boardFrame);
-                }
-                repaint();
+                refreshBoard(false);
             }
         });
         music_label.addMouseListener(new MouseInputAdapter(){
@@ -183,6 +134,30 @@ public class GameFrame extends JFrame{
                 music_label.setText("Music : "+value);
             }
         });
+    }
+    public void refreshBoard(boolean veryNew){
+        getContentPane().removeAll();
+        if (board == null || optionsChanged || veryNew){
+            puzzle = puzzleGenerator.newPuzzle(options.getDifficulty());
+            board = new Board(puzzle,options);
+            boardFrame = new GridPanel(board);
+            labels = board.getLabels();
+            optionsChanged = false;
+            add(boardFrame);
+        } else {
+            board.repaintLabels(labels);
+            add(boardFrame);
+        }
+        repaint();
+    }
+    public void addOptions(){
+        getContentPane().removeAll();
+        add(back_label);
+        add(high_label);
+        add(diff_label);
+        add(music_label);
+        add(optionsFrame);
+        repaint();
     }
     public void music (){
         player.play("Music/BGM.wav");
