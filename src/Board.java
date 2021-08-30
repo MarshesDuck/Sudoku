@@ -103,8 +103,26 @@ public class Board {
     private boolean checkMove(String val, int x_coord, int y_coord){
         return (checkRow(val,x_coord,y_coord) && checkColumn(val,x_coord,y_coord) && checkBox(val,x_coord,y_coord));
     }
+    public void solveBoard(){
+        Solve solver = new Solve(this);
+    }
+    public void clearLabels(){
+        for (int i = 0; i < label.length; i++){
+            for (int j = 0; j < label.length; j++){
+                if (puzzle[i][j] == 0){
+                    label[i][j].setText("");
+                }
+            }
+        }
+    }
     public JLabel[][] getLabels(){
         return label;
+    }
+    public int[][] getPuzzle(){
+        return puzzle;
+    }
+    public void setLabels(JLabel[][] label){
+        this.label = label;
     }
     
 }
