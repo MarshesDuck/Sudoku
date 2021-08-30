@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 public class Solve{
 
     private int[][] puzzle;
@@ -17,7 +18,7 @@ public class Solve{
         backtrack();
     }
     private void backtrack(){
-    
+
         if (gridCount == 0){
             finished = true;
         } else {
@@ -95,7 +96,7 @@ public class Solve{
         }
         return true;
     }
-    public int freeSquares(){
+    private int freeSquares(){
         int freeSquares = 0;
         for (int i = 0; i < puzzle.length; i++){
             for (int j = 0; j < puzzle.length; j++){
@@ -106,7 +107,10 @@ public class Solve{
         }
         return freeSquares;
     }
-    public class Tuple {
+    public int[][] getSolution(){
+        return puzzle;
+    }
+    private class Tuple {
         private int x_coord;
         private int y_coord;
         private ArrayList<Integer> value;
