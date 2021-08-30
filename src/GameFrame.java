@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.MouseInputAdapter;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class GameFrame extends JFrame{
@@ -28,6 +29,7 @@ public class GameFrame extends JFrame{
     private JMenuItem optionsMenu;
     private JMenuItem mainMenu;
     private JMenuItem resumeMenu;
+    private JMenuItem solveMenu;
 
     private BGMPlayer player;
     private String audioFile = "Music/BGM.wav";
@@ -37,6 +39,7 @@ public class GameFrame extends JFrame{
         menuBar = new MenuBar();
 
         main = new MainPanel();
+
 
         optionsFrame = new OptionsPanel();
         options = new Options(1,false,true);
@@ -54,7 +57,9 @@ public class GameFrame extends JFrame{
         setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        player.play(audioFile);
+        if (options.getMusic()){
+            player.play(audioFile);
+        }
 
     }
     public void Listeners(){
@@ -76,6 +81,17 @@ public class GameFrame extends JFrame{
             public void actionPerformed(ActionEvent e){
                 addOptions();
             }
+        });
+        solveMenu.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                getContentPane().removeAll();
+                board.solveBoard();
+                GridPanel boardFrame = new GridPanel(new Board(board.getPuzzle(),options));
+                add(boardFrame);
+                repaint();
+            }
+
         });
         mainMenu.addActionListener(new ActionListener(){
             @Override
@@ -251,10 +267,12 @@ public class GameFrame extends JFrame{
             newMenu = new JMenuItem("new");
             optionsMenu = new JMenuItem("options");
             mainMenu = new JMenuItem("return");
+            solveMenu = new JMenuItem("solve");
 
             menu.add(resumeMenu);
             menu.add(newMenu);
             menu.add(optionsMenu);
+            menu.add(solveMenu);
             menu.add(mainMenu);
         }
 
