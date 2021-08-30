@@ -42,7 +42,7 @@ public class GameFrame extends JFrame{
 
 
         optionsFrame = new OptionsPanel();
-        options = new Options(1,false,false);
+        options = new Options(1,false,true);
         optionsChanged = false;
 
         puzzleGenerator = new GeneratePuzzle();
