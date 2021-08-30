@@ -32,7 +32,7 @@ public class GameFrame extends JFrame{
     private JMenuItem solveMenu;
 
     private BGMPlayer player;
-    private String audioFile = "Music/BGM.wav";
+    private String audioFile = "assets/BGM.wav";
 
     public GameFrame(){
 
