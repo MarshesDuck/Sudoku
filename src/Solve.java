@@ -107,9 +107,6 @@ public class Solve{
         }
         return freeSquares;
     }
-    public int[][] getSolution(){
-        return puzzle;
-    }
     private class Tuple {
         private int x_coord;
         private int y_coord;
