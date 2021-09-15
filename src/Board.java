@@ -104,7 +104,7 @@ public class Board {
         return (checkRow(val,x_coord,y_coord) && checkColumn(val,x_coord,y_coord) && checkBox(val,x_coord,y_coord));
     }
     public void solveBoard(){
-        Solve solver = new Solve(this);
+        new Solve(this);
     }
     public void clearLabels(){
         for (int i = 0; i < label.length; i++){

@@ -88,6 +88,7 @@ public class GameFrame extends JFrame{
                 getContentPane().removeAll();
                 board.solveBoard();
                 GridPanel boardFrame = new GridPanel(new Board(board.getPuzzle(),options));
+                optionsChanged = true;
                 add(boardFrame);
                 repaint();
             }
